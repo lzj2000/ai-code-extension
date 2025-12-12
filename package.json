@@ -1,0 +1,101 @@
+{
+  "name": "ai-code",
+  "displayName": "AI Code",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [],
+    "configuration": {
+      "title": "AI Code",
+      "properties": {
+        "aiCode.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "使用的模型API_KEY"
+        },
+        "aiCode.model": {
+          "type": "string",
+          "default": "gpt-3.5-turbo",
+          "enum": [
+            "gpt-3.5-turbo",
+            "gpt-4"
+          ],
+          "description": "使用的模型"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "aiCode",
+          "icon": "imgs/icon-ai.png",
+          "title": "AI Code"
+        }
+      ]
+    },
+    "views": {
+      "aiCode": [
+        {
+          "id": "aiCode-view",
+          "name": "AI Assistant",
+          "icon": "imgs/icon-ai.png",
+          "type": "webview"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.6",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "@types/vscode": "^1.107.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "autoprefixer": "^10.4.22",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "eslint": "^9.39.1",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.2.0",
+    "style-loader": "^3.3.3",
+    "tailwindcss": "^4.1.18",
+    "ts-loader": "^9.5.4",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.4",
+    "@langchain/langgraph": "^1.0.4",
+    "@langchain/openai": "^1.1.3",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "lucide-react": "^0.560.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
