@@ -90,6 +90,7 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "@antfu/eslint-config": "^6.6.1",
     "@langchain/core": "^1.1.4",
     "@langchain/langgraph": "^1.0.4",
     "@langchain/openai": "^1.1.3",
