@@ -4,7 +4,7 @@ import React from 'react'
 interface TopToolbarProps {
   showConversations: boolean
   onToggleConversations: (show: boolean) => void
-  onNewConversation: () => void
+  onNewConversation: (id: string) => void
   currentTitle: string
 }
 
@@ -35,7 +35,7 @@ export const TopToolbar: React.FC<TopToolbarProps> = ({
         </h2>
       </div>
       <button
-        onClick={onNewConversation}
+        onClick={() => onNewConversation(Date.now().toString())}
         className="h-7 w-7 shrink-0 flex items-center justify-center text-foreground hover:bg-secondary rounded-md transition-colors"
         title="新对话"
       >

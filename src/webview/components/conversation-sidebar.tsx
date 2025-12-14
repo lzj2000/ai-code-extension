@@ -1,14 +1,8 @@
+import type { Conversation } from '@/types'
 import { Search, X } from 'lucide-react'
+
 import React from 'react'
-
 import { ConversationItem } from './conversation-item'
-
-interface Conversation {
-  id: string
-  title: string
-  lastMessage?: string
-  timestamp: Date
-}
 
 interface ConversationSidebarProps {
   conversations: Conversation[]
@@ -19,7 +13,6 @@ interface ConversationSidebarProps {
   onSelectConversation: (id: string) => void
   onSearchChange: (query: string) => void
   onDeleteConversation: (id: string) => void
-  formatTimestamp: (date: Date) => string
 }
 
 export const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
@@ -31,7 +24,6 @@ export const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
   onSelectConversation,
   onSearchChange,
   onDeleteConversation,
-  formatTimestamp,
 }) => {
   return (
     <>
@@ -49,7 +41,7 @@ export const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
           <button
             onClick={onClose}
             className="h-6 w-6 flex items-center justify-center text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent rounded transition-all"
-            title="关闭侧边栏"
+            name="关闭侧边栏"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -95,7 +87,6 @@ export const ConversationSidebar: React.FC<ConversationSidebarProps> = ({
                         e.stopPropagation()
                         onDeleteConversation(conv.id)
                       }}
-                      formatTimestamp={formatTimestamp}
                     />
                   ))}
                 </div>

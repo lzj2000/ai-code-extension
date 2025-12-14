@@ -1,73 +1,38 @@
 'use client'
 
 import type React from 'react'
+import type { Message } from '../types'
 import { Bot, Send, User } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { useChatMessages } from '../hooks/useChatMessages'
-import { useSendMessage } from '../hooks/useSendMessage'
 import { ScrollArea } from './ui/scroll-area'
 import { Textarea } from './ui/textarea'
 
 interface ChatMessagesProps {
-  conversationId: string
+  onSend: (message: string) => void
+  disabled?: boolean
+  messages: Message[]
 }
 
-export function ChatMessages({ conversationId }: ChatMessagesProps) {
-  // 使用 Hooks 管理状态
-  const {
-    messages,
-    isLoading,
-    setIsLoading,
-    addUserMessage,
-    addAssistantMessage,
-    updateMessageContent,
-    finishStreaming,
-    addErrorMessage,
-    resetMessages,
-  } = useChatMessages([
-    {
-      id: '1',
-      content: '你好！我是 AI 助手，有什么可以帮助你的吗？',
-      role: 'assistant',
-      timestamp: new Date(Date.now() - 1000 * 60 * 10),
-    },
-  ])
-
-  const { sendMessage } = useSendMessage({
-    sessionId: conversationId,
-    setIsLoading,
-    addUserMessage,
-    addAssistantMessage,
-    updateMessageContent,
-    finishStreaming,
-    addErrorMessage,
-    updateSessionName: () => {}, // 暂时为空，可以在 App 中处理
-  })
-
+export function ChatMessages({ onSend, disabled, messages }: ChatMessagesProps) {
   const [inputValue, setInputValue] = useState('')
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  // 监听 conversationId 变化，重置消息
-  useEffect(() => {
-    resetMessages()
-  }, [conversationId, resetMessages])
-
   // 发送消息
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading)
+  const handleonSend = async () => {
+    if (!inputValue.trim() || disabled)
       return
 
     const input = inputValue
     setInputValue('')
 
-    await sendMessage(input)
+    await onSend(input)
   }
 
   // 处理键盘事件
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      handleonSend()
     }
   }
 
@@ -151,7 +116,7 @@ export function ChatMessages({ conversationId }: ChatMessagesProps) {
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            disabled={isLoading}
+            disabled={disabled}
             className="flex-1 min-h-[52px] max-h-[200px] w-full resize-none bg-transparent border-none text-input-foreground placeholder:text-muted-foreground focus-visible:ring-0 shadow-none p-3 pb-10"
             rows={1}
           />
@@ -160,8 +125,8 @@ export function ChatMessages({ conversationId }: ChatMessagesProps) {
               Enter 发送
             </p>
             <button
-              onClick={handleSendMessage}
-              disabled={!inputValue.trim() || isLoading}
+              onClick={handleonSend}
+              disabled={!inputValue.trim() || disabled}
               className="h-8 w-8 shrink-0 flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground disabled:bg-muted disabled:text-muted-foreground rounded-lg transition-colors"
             >
               <Send className="h-4 w-4" />
