@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
-import * as path from "path";
+import * as path from 'node:path'
+import * as vscode from 'vscode'
 
 class ChatGPTWebviewProvider implements vscode.WebviewViewProvider {
   constructor(private context: vscode.ExtensionContext) {}
@@ -7,57 +7,41 @@ class ChatGPTWebviewProvider implements vscode.WebviewViewProvider {
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
     context: vscode.WebviewViewResolveContext,
-    _token: vscode.CancellationToken
+    _token: vscode.CancellationToken,
   ) {
     // 启用脚本和本地资源访问
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [
-        vscode.Uri.file(path.join(this.context.extensionPath, "dist")),
+        vscode.Uri.file(path.join(this.context.extensionPath, 'dist')),
       ],
-    };
+    }
 
-    webviewView.webview.html = this.getHtmlForWebview(webviewView.webview);
+    webviewView.webview.html = this.getHtmlForWebview(webviewView.webview)
 
     // 监听来自webview的消息
     webviewView.webview.onDidReceiveMessage(
-      async (message) => {
-        switch (message.command) {
-          case "sendMessage":
-            // 处理来自webview的消息
-            const userInput = message.content;
-            console.log("用户消息:", userInput);
+      async () => {
 
-            // 这里可以添加实际的API调用逻辑
-            // 例如调用ChatGPT API
-            const response = await this.getAIResponse(userInput);
-
-            // 将响应发送回webview
-            webviewView.webview.postMessage({
-              command: "responseMessage",
-              content: response,
-            });
-            break;
-        }
       },
       undefined,
-      []
-    );
+      [],
+    )
   }
 
   private async getAIResponse(message: string): Promise<string> {
     // 这是一个示例方法，实际应该调用真实的AI API
     // 你可以根据VS Code扩展配置获取API密钥
-    return `已收到您的消息: "${message}"。请实现实际的API调用逻辑。`;
+    return `已收到您的消息: "${message}"。请实现实际的API调用逻辑。`
   }
 
   private getHtmlForWebview(webview: vscode.Webview) {
     // 获取webview.js的URI
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.file(
-        path.join(this.context.extensionPath, "dist", "webview.js")
-      )
-    );
+        path.join(this.context.extensionPath, 'dist', 'webview.js'),
+      ),
+    )
 
     return `
       <!DOCTYPE html>
@@ -76,7 +60,8 @@ class ChatGPTWebviewProvider implements vscode.WebviewViewProvider {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            padding: 2px;
+            padding: 0;
+            margin: 0;
           }
           #root {
             width: 100%;
@@ -91,8 +76,8 @@ class ChatGPTWebviewProvider implements vscode.WebviewViewProvider {
         <script src="${scriptUri}"></script>
       </body>
       </html>
-    `;
+    `
   }
 }
 
-export default ChatGPTWebviewProvider;
+export default ChatGPTWebviewProvider
